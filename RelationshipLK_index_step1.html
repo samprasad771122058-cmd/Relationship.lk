@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relationship.lk</title>
+<style>
+:root{--lav:#d9c8ee;--lav2:#efe7f7;--deep:#5b4675;--pink:#e8b8cf;--text:#302b35;--white:#fff}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--lav2);color:var(--text)}
+.app{max-width:520px;margin:auto;min-height:100vh;background:#faf8fc}
+header{padding:24px 20px 16px;background:linear-gradient(135deg,var(--lav),#f4dce8);border-radius:0 0 28px 28px}
+.logo{font-size:27px;font-weight:800;color:var(--deep)}.tag{margin-top:4px;color:#66586e}
+main{padding:18px 16px 90px}.card{background:#fff;border-radius:20px;padding:18px;margin:12px 0;box-shadow:0 4px 18px #6c547015}
+h2{margin:5px 0 14px;color:var(--deep)}h3{margin:8px 0}button{border:0;border-radius:14px;padding:13px 16px;font-weight:700;cursor:pointer}
+.primary{background:var(--deep);color:#fff;width:100%}.secondary{background:var(--lav2);color:var(--deep)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{margin:9px 0}label{font-size:13px;color:#6d6471}
+input,select,textarea{width:100%;padding:12px;border:1px solid #ddd3e3;border-radius:12px;margin-top:5px;font-size:15px}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);max-width:520px;width:100%;display:flex;background:#fff;border-top:1px solid #e8e0eb;padding:8px}
+.nav button{flex:1;background:transparent;color:#66586e;font-size:12px}.profile{display:flex;gap:12px;align-items:center}
+.avatar{width:58px;height:58px;border-radius:50%;background:var(--pink);display:grid;place-items:center;font-size:25px}
+.pill{display:inline-block;background:var(--lav2);color:var(--deep);padding:6px 9px;border-radius:20px;font-size:12px;margin:3px}
+.ad{background:#f6edf8;border:1px dashed #b9a5c9;text-align:center;color:#725d80;padding:14px;border-radius:16px}
+.notice{background:#eef7ee;border:1px solid #cde3cd;padding:12px;border-radius:12px;color:#456345}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="logo">♡➜♡ Relationship.lk</div><div class="tag">Connect. Meet. Build a future.</div></header>
+<main id="content"></main>
+<div class="nav">
+<button onclick="home()">⌂<br>මුල් පිටුව</button>
+<button onclick="profile()">♡<br>Profile</button>
+<button onclick="find()">⌕<br>සොයන්න</button>
+<button onclick="matches()">♥<br>Matches</button>
+</div>
+</div>
+<script>
+const people=[
+{id:1,name:"Nimali",age:27,location:"Kandy",job:"Teacher",edu:"Bachelor's",about:"Friendly and family oriented."},
+{id:2,name:"Kasun",age:30,location:"Colombo",job:"Software Developer",edu:"Bachelor's",about:"Looking for a serious relationship."},
+{id:3,name:"Tharushi",age:25,location:"Kegalle",job:"Accountant",edu:"Diploma",about:"Simple, kind and positive."}
+];
+let liked=JSON.parse(localStorage.getItem("liked")||"[]");
+let myProfile=JSON.parse(localStorage.getItem("myProfile")||"null");
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+function saveLiked(){localStorage.setItem("liked",JSON.stringify(liked))}
+function mini(p){return `<div class="card profile"><div class="avatar">♡</div><div style="flex:1"><h3>${esc(p.name)}, ${p.age}</h3><div>${esc(p.location)} · ${esc(p.job)}</div><button class="secondary" onclick="view(${p.id})">View Profile</button></div></div>`}
+function home(){
+let me=myProfile?`<div class="card"><h3>👤 මගේ Profile</h3><p><b>${esc(myProfile.name)}</b>, ${myProfile.age}</p><p>${esc(myProfile.location)} · ${esc(myProfile.job)}</p><button class="secondary" onclick="profile()">Edit Profile</button></div>`:`<div class="card"><h3>ඔබගේ Profile එක සාදන්න</h3><p>ඔබ ගැන විස්තර එකතු කරන්න.</p><button class="primary" onclick="profile()">Create Profile</button></div>`;
+content.innerHTML=`<h2>Welcome to Relationship.lk 💜</h2>${me}<div class="grid"><div class="card"><h3>Find Partner</h3><p>වයස සහ ප්‍රදේශය අනුව සොයන්න.</p><button class="secondary" onclick="find()">Find</button></div><div class="card"><h3>My Matches</h3><p>Like කළ profiles බලන්න.</p><button class="secondary" onclick="matches()">Matches</button></div></div><div class="card"><h3>🚀 Paid Profile Boost</h3><p>ඔබගේ profile එක වැඩි සාමාජිකයන්ට පෙන්වීමට.</p><button class="primary" onclick="boost()">Boost Profile</button></div><div class="ad">ADVERTISEMENT<br><small>Businesses can advertise on Relationship.lk</small><br><br><button class="secondary" onclick="ads()">Advertise Your Business</button></div><h2>Recent Profiles</h2>${people.map(mini).join("")}`;
+}
+function profile(){
+let p=myProfile||{};
+content.innerHTML=`<h2>${myProfile?"Edit Profile":"Create Profile"}</h2><div class="card">
+<div class="field"><label>නම / Name</label><input id="name" value="${esc(p.name||"")}" placeholder="Your name"></div>
+<div class="grid"><div class="field"><label>වයස (18+)</label><input id="age" type="number" min="18" max="100" value="${p.age||""}"></div>
+<div class="field"><label>Gender</label><select id="gender"><option ${p.gender==="Female"?"selected":""}>Female</option><option ${p.gender==="Male"?"selected":""}>Male</option></select></div></div>
+<div class="field"><label>District</label><input id="district" value="${esc(p.location||"")}" placeholder="e.g. Kegalle"></div>
+<div class="field"><label>Education</label><input id="education" value="${esc(p.edu||"")}" placeholder="Education"></div>
+<div class="field"><label>Occupation</label><input id="job" value="${esc(p.job||"")}" placeholder="Occupation"></div>
+<div class="field"><label>About you</label><textarea id="about" rows="4" placeholder="Write a short introduction">${esc(p.about||"")}</textarea></div>
+<button class="primary" onclick="saveProfile()">Save Profile</button>
+${myProfile?'<br><br><button class="secondary" style="width:100%" onclick="deleteProfile()">Delete My Profile</button>':''}</div>`;
+}
+function saveProfile(){
+const name=document.getElementById("name").value.trim(),age=Number(document.getElementById("age").value);
+if(!name){alert("කරුණාකර නම ඇතුළත් කරන්න.");return} if(!age||age<18){alert("වයස 18 හෝ ඊට වැඩි විය යුතුයි.");return}
+myProfile={name,age,gender:document.getElementById("gender").value,location:document.getElementById("district").value.trim(),edu:document.getElementById("education").value.trim(),job:document.getElementById("job").value.trim(),about:document.getElementById("about").value.trim()};
+localStorage.setItem("myProfile",JSON.stringify(myProfile));
+content.innerHTML=`<h2>Profile Saved ✅</h2><div class="card"><div class="notice">ඔබගේ Profile එක මේ device/browser එකේ save කර ඇත.</div><br><div class="profile"><div class="avatar">♡</div><div><h3>${esc(name)}, ${age}</h3><div>${esc(myProfile.location)} · ${esc(myProfile.job)}</div></div></div><p>${esc(myProfile.about)}</p><button class="primary" onclick="home()">Go to Home</button></div>`;
+}
+function deleteProfile(){if(confirm("ඔබගේ Profile එක මකා දැමීමට අවශ්‍යද?")){localStorage.removeItem("myProfile");myProfile=null;home()}}
+function find(){content.innerHTML=`<h2>Find Partner</h2><div class="card"><div class="grid"><div class="field"><label>Min age</label><input id="minage" type="number" value="18"></div><div class="field"><label>Max age</label><input id="maxage" type="number" value="60"></div></div><div class="field"><label>District</label><input id="district" placeholder="Any district"></div><button class="primary" onclick="search()">Search Partners</button></div><div id="results">${people.map(mini).join("")}</div>`}
+function search(){let min=+document.getElementById("minage").value||18,max=+document.getElementById("maxage").value||100,d=(document.getElementById("district").value||"").toLowerCase();let r=people.filter(p=>p.age>=min&&p.age<=max&&(!d||p.location.toLowerCase().includes(d)));results.innerHTML=r.length?r.map(mini).join(""):"<div class='card'>No profiles found.</div>"}
+function view(id){let p=people.find(x=>x.id===id);content.innerHTML=`<h2>Partner Profile</h2><div class="card"><div class="profile"><div class="avatar" style="font-size:32px">♡</div><div><h2>${esc(p.name)}, ${p.age}</h2><div>${esc(p.location)}</div></div></div><p><span class="pill">${esc(p.job)}</span><span class="pill">${esc(p.edu)}</span></p><p>${esc(p.about)}</p><button class="primary" onclick="like(${p.id})">♡ Like Profile</button></div>`}
+function like(id){if(!liked.includes(id))liked.push(id);saveLiked();alert("Profile liked ❤️");matches()}
+function matches(){let arr=people.filter(p=>liked.includes(p.id));content.innerHTML=`<h2>My Matches</h2>${arr.length?arr.map(mini).join(""):"<div class='card'>No matches yet. Find someone and tap Like ❤️</div>"}`}
+function boost(){content.innerHTML=`<h2>Paid Profile Boost 🚀</h2><div class="card"><p>Boost feature එක පසුව payment gateway එකකට connect කරමු.</p><button class="primary" onclick="alert('Payment gateway එක ඊළඟ අදියරේදී connect කරමු.')">Continue to Payment</button></div>`}
+function ads(){content.innerHTML=`<h2>Advertise on Relationship.lk</h2><div class="card"><p>Business advertisement request එකක් submit කරන්න.</p><input placeholder="Business name"><input placeholder="Phone / WhatsApp"><input placeholder="Website or Facebook"><textarea rows="3" placeholder="Describe your advertisement"></textarea><br><br><button class="primary" onclick="alert('Advertisement inquiry එක demo එකේදී submit වුණා.')">Submit Advertisement Request</button></div>`}
+home();
+</script>
+</body>
+</html>
